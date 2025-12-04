@@ -1,5 +1,5 @@
 <img src="https://raw.githubusercontent.com/sanctuuary/.github/main/logos/RESTful-APE-dark-logo.png#gh-dark-mode-only" alt="RestAPE Logo" style="width: 80%;">
-<img src="https://raw.githubusercontent.com/sanctuuary/.github/main/logos/RESTful-light-logo.png#gh-light-mode-only" alt="RestAPE Logo" style="width: 80%;">
+<img src="https://raw.githubusercontent.com/sanctuuary/.github/main/logos/RESTful-APE-light-logo.png#gh-light-mode-only" alt="RestAPE Logo" style="width: 80%;">
 
 | Badges |                                                                                                                                                                                                                                                                                                                        |
 |:----:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
