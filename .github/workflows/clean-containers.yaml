@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Delete 'PR' containers older than a week
-        uses: snok/container-retention-policy@v3.0.0
+        uses: snok/container-retention-policy@v3.0.1
         with:
           account: sanctuuary
           image-names: "!empty"
