@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.m2 \
     mvn -f pom.xml clean package
 
 
-FROM eclipse-temurin:17-jre-jammy 
+FROM eclipse-temurin:25-jre-jammy 
 
 WORKDIR /app
 COPY --from=builder /app/target/*.jar /app/runner.jar
