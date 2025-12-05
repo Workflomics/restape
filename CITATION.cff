@@ -40,8 +40,8 @@ authors:
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10048235
-repository-code: 'https://github.com/sanctuuary/restape'
-url: 'https://github.com/sanctuuary/restape#readme'
+repository-code: 'https://github.com/workflomics/restape'
+url: 'https://github.com/workflomics/restape#readme'
 abstract: >-
   A RESTful API for the APE library (RESTful APE) provides a
   way for users to interact with APE's automated pipeline
