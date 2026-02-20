@@ -17,7 +17,7 @@ public class SnakeFileInfo {
 
     @JsonProperty("file_name")
     private String fileName;
-    static final String snakemakeExtension = "snakefile";
+    static final String snakemakeExtension = "smk";
 
 
     /**
