@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import nl.esciencecenter.controller.dto.CWLZip;
+import nl.esciencecenter.controller.dto.WorkflowsZip;
 import nl.uu.cs.ape.utils.APEFiles;
 
 @SpringBootTest
@@ -29,10 +29,10 @@ class IOUtilsTest {
             String runID = result.get(0).getRunId();
             String cwlFile = result.get(0).getCwlName();
 
-            CWLZip cwlZip = new CWLZip();
-            cwlZip.setRunID(runID);
-            cwlZip.setWorkflows(List.of(cwlFile));
+            WorkflowsZip workflowsZip = new WorkflowsZip();
+            workflowsZip.setRunID(runID);
+            workflowsZip.setWorkflows(List.of(cwlFile));
 
-            IOUtils.zipFilesForLocalExecution(cwlZip);
+            IOUtils.zipFilesForLocalExecution(workflowsZip);
     }
 }

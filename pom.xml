@@ -8,9 +8,9 @@
 		<version>3.0.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>nl.esciencecenter</groupId>
+	<groupId>org.workflomics</groupId>
 	<artifactId>restape</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>restape</name>
 	<description>RESTful API for the APE library</description>
 	<licenses>
@@ -23,10 +23,16 @@
 	<developers>
 		<developer>
 			<name>Vedran Kasalica</name>
-			<email>v.kasalica@esciencecenter.nl</email>
-			<organization>Netherlands eScience Center</organization>
-			<organizationUrl>https://www.esciencecenter.nl/</organizationUrl>
+			<email>vedran.kasalica@health-ri.nl</email>
+			<organization>Health-RI</organization>
+			<organizationUrl>https://www.health-ri.nl/</organizationUrl>
 		</developer>
+        <developer>
+            <name>Mario Frank</name>
+            <email>mario.frank@uni-potsdam.de</email>
+            <organization>University of Potsdam</organization>
+            <organizationUrl>https://www.uni-potsdam.de</organizationUrl>
+        </developer>
 	</developers>
 	<scm>
 		<connection>scm:git:git://github.com/workflomics/restape.git</connection>
@@ -86,11 +92,11 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/io.github.sanctuuary/APE -->
+		<!-- https://mvnrepository.com/artifact/org.workflomics/APE -->
 		<dependency>
-			<groupId>io.github.sanctuuary</groupId>
+			<groupId>org.workflomics</groupId>
 			<artifactId>APE</artifactId>
-			<version>2.5.3</version>
+			<version>2.6.1</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->

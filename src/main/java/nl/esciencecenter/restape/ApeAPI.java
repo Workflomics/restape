@@ -248,8 +248,9 @@ public class ApeAPI {
 
         SolutionsList candidateSolutions = executeSynthesis(configJson, runID);
 
-        // Write solutions (as CWL files and figures) to the file system.
-        APE.writeCWLWorkflows(candidateSolutions);
+        // Write solutions (as CWL and Snakemake files and figures) to the file system.
+        APE.writeCWLWorkflows(candidateSolutions, true);
+        APE.writeSnakemakeWorkflows(candidateSolutions, true);
         APE.writeTavernaDesignGraphs(candidateSolutions, Format.SVG);
         APE.writeTavernaDesignGraphs(candidateSolutions, Format.PNG);
 
@@ -287,6 +288,7 @@ public class ApeAPI {
         runConfig.setSolutionPath(solutionPath);
         int maxSol = runConfig.getMaxNoSolutions();
         runConfig.setNoCWL(maxSol);
+        runConfig.setNoSnakemake(maxSol);
         runConfig.setNoGraphs(maxSol);
         runConfig.setDebugMode(true);
         // run the synthesis and retrieve the solutions

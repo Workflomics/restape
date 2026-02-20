@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import nl.esciencecenter.controller.dto.CWLZip;
+import nl.esciencecenter.controller.dto.WorkflowsZip;
 
 /**
  * The {@code IOUtils} class provides static methods to read the input files.
@@ -43,6 +43,17 @@ public class IOUtils {
         }
 
         /**
+         * Get the Snakemake content of the file at the given path.
+         *
+         * @param filePath - path to the Snakemake file
+         * @return Snakemake content of the file representing a workflow
+         * @throws IOException - if the file cannot be read
+         */
+        public static String getLocalSnakemakeFile(Path filePath) throws IOException, NoSuchFileException {
+            return FileUtils.readFileToString(filePath.toFile(), StandardCharsets.UTF_8);
+        }
+
+        /**
          * Get the JSON content of the file at the given path.
          * 
          * @param filePath - path to the benchmarking JSON file
@@ -58,24 +69,24 @@ public class IOUtils {
          * a single zip file. In addition, a `readme.txt` file with instructions on how
          * to run the workflows is added to the zip.
          * 
-         * @param cwlZipInfo - the CWL zip information, containing the runID and the list of workflow file names.
+         * @param workflowsZipInfo - the CWL zip information, containing the runID and the list of workflow file names.
          * 
          * @return Path to the created zip file.
          * @throws IOException Error is thrown if the zip file cannot be created or
          *                     written to.
          */
-        public static Path zipFilesForLocalExecution(CWLZip cwlZipInfo) throws IOException {
+        public static Path zipFilesForLocalExecution(WorkflowsZip workflowsZipInfo) throws IOException {
                 
-                List<Path> cwlFilePaths = cwlZipInfo.getCWLandSVGPaths();
+                List<Path> filePaths = workflowsZipInfo.getAllPaths();
                 
                 // Add the CWL input file to the zip
-                Path cwlInputPath = RestApeUtils.calculatePath(cwlZipInfo.getRunID(), "CWL", "input.yml");
-                cwlFilePaths.add(cwlInputPath);
+                Path cwlInputPath = RestApeUtils.calculatePath(workflowsZipInfo.getRunID(), "CWL", "input.yml");
+                filePaths.add(cwlInputPath);
                 
                 Path zipPath = cwlInputPath.getParent().resolve("workflows.zip");
                 try (FileOutputStream fos = new FileOutputStream(zipPath.toFile());
                                 ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-                        for (Path file : cwlFilePaths) {
+                        for (Path file : filePaths) {
                                 zipOut.putNextEntry(new ZipEntry(file.getFileName().toString()));
                                 Files.copy(file, zipOut);
                                 zipOut.closeEntry();
