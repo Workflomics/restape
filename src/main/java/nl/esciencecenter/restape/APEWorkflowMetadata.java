@@ -30,6 +30,8 @@ public class APEWorkflowMetadata {
     private String runId;
     @JsonProperty("cwl_name")
     private String cwlName;
+    @JsonProperty("snakemake_name")
+    private String snakemakeName;
     @JsonProperty("figure_name")
     private String figureName;
     @JsonProperty("benchmark_file")
@@ -49,6 +51,7 @@ public class APEWorkflowMetadata {
         this.workflowLength = sol.getSolutionLength();
         this.runId = runID;
         this.cwlName = sol.getFileName() + ".cwl";
+        this.snakemakeName = sol.getFileName() + ".smk";
         this.figureName = sol.getFileName();
         if (benchmark) {
             this.benchmarkFile = sol.getFileName() + ".json";
@@ -70,6 +73,7 @@ public class APEWorkflowMetadata {
         json.put("workflow_length", this.workflowLength);
         json.put("run_id", this.runId);
         json.put("cwl_name", this.cwlName);
+        json.put("snakemake_name", this.snakemakeName);
         json.put("figure_name", this.figureName);
         if (this.benchmarkFile != null) {
             json.put("benchmark_file", this.benchmarkFile);
