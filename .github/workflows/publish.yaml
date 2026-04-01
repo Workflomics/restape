@@ -51,14 +51,14 @@ jobs:
           sudo fc-cache -f
 
       - name: Build Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false  # Do not push at this stage
           tags: ${{ steps.meta.outputs.tags }}
 
       - name: Push Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
