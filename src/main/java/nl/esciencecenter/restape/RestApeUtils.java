@@ -8,17 +8,17 @@ import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONObject;
 
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.AccessLevel;
-import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RestApeUtils {
 
-    @Getter(lazy = true)
+    private static final Logger log = LoggerFactory.getLogger(RestApeUtils.class);
     private static final String solutionPath = getSolutionsDir();
+
+    private RestApeUtils() {}
+
+    public static String getSolutionPath() { return solutionPath; }
     private static final String allSolutionsDirName = "apeOutputs";
     private static final int hashLength = 10;
     private static final int currentTimestampLength = 13;

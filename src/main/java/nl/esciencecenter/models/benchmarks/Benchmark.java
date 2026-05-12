@@ -5,52 +5,34 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
 /**
  * Abstract class {@link Benchmark} containing general information about a
  * benchmark, however, it must be implemented (e.g., as an bio.tools benchmark)
  * to be able to compute the benchmark value.
  */
-
-@RequiredArgsConstructor
 public class Benchmark {
 
-    /**
-     * General information about the benchmark that is being computed.
-     */
-    @NonNull
-    @Getter
-    @Setter
     private BenchmarkBase benchmarkInfo;
-    /**
-     * Value of the benchmark for the workflow.
-     */
-    @Getter
-    @Setter
     private String value;
-    /**
-     * Desirability value (from 0 to 1.0) of the benchmark for the workflow.
-     */
-    @Getter
-    @Setter
     private double desirabilityValue;
-    /**
-     * Benchmark for each tool/step in the workflow.
-     */
-    @Getter
-    @Setter
     private List<WorkflowStepBenchmark> workflow;
 
-    /**
-     * Generate a JSON object containing the benchmark information. The content can
-     * be visualized using the Wokrkflomics web platform.
-     * 
-     * @return JSON object containing the benchmark information.
-     */
+    public Benchmark(BenchmarkBase benchmarkInfo) {
+        this.benchmarkInfo = benchmarkInfo;
+    }
+
+    public BenchmarkBase getBenchmarkInfo() { return benchmarkInfo; }
+    public void setBenchmarkInfo(BenchmarkBase benchmarkInfo) { this.benchmarkInfo = benchmarkInfo; }
+
+    public String getValue() { return value; }
+    public void setValue(String value) { this.value = value; }
+
+    public double getDesirabilityValue() { return desirabilityValue; }
+    public void setDesirabilityValue(double desirabilityValue) { this.desirabilityValue = desirabilityValue; }
+
+    public List<WorkflowStepBenchmark> getWorkflow() { return workflow; }
+    public void setWorkflow(List<WorkflowStepBenchmark> workflow) { this.workflow = workflow; }
+
     public JSONObject toJSON() {
         JSONObject benchmarkJson = this.benchmarkInfo.getTitleJson();
 

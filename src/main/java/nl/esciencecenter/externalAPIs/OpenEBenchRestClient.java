@@ -11,9 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import nl.uu.cs.ape.utils.APEFiles;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,9 +22,11 @@ import okhttp3.Response;
  * The {@code ToolBenchmarkingAPIs} class provides methods to retrieve and
  * process tool metrics provided by OpenEBench API.
  */
-@Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OpenEBenchRestClient {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenEBenchRestClient.class);
+
+    private OpenEBenchRestClient() {}
 
     private static final OkHttpClient client = new OkHttpClient();
 
