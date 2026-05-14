@@ -2,6 +2,7 @@ package nl.esciencecenter.restape;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * netzwerkunabhängig zu halten. Getestet wird die Map-Lookup-Logik und der
  * shortForm-Fallback.
  */
+@SpringBootTest
 class EdamLabelsTest {
 
     private EdamLabels edamLabels;

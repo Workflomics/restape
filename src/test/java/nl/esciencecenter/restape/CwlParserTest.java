@@ -2,6 +2,7 @@ package nl.esciencecenter.restape;
 
 import nl.esciencecenter.controller.dto.ParseResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * T-PAR-01: Verifikation der korrekten Knoten- und Kanten-Extraktion (FA 1).
  * T-ROB-01: Robustheit bei ungültigen oder unvollständigen CWL-Dateien (NFA 4).
  */
+@SpringBootTest
 class CwlParserTest {
 
     private static final UnaryOperator<String> IDENTITY = uri -> uri;
