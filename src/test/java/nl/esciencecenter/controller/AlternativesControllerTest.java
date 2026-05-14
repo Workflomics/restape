@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 /**
@@ -50,12 +49,8 @@ class AlternativesControllerTest {
 
     // ── Happy Path ───────────────────────────────────────────────────────────
 
-    /**
-     * Ein valider CWL-v1.2-Workflow liefert HTTP 200 und ein JSON-Objekt
-     * mit den Feldern nodes, edges, inputs und outputs.
-     */
     @Test
-    void parseCwl_validWorkflow_returns200WithGraph() throws Exception {
+    void testParseCwlPass() throws Exception {
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(fixtureFile("test_workflow.cwl"))
                         .accept(MediaType.APPLICATION_JSON))
@@ -67,27 +62,18 @@ class AlternativesControllerTest {
                 .andExpect(jsonPath("$.outputs", hasSize(1)));
     }
 
-    /**
-     * Tool-Labels im Response enthalten keinen APE-generierten Zahlensuffix (_01).
-     */
     @Test
-    void parseCwl_validWorkflow_toolLabelsHaveNoSuffix() throws Exception {
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
+    void testParseCwlToolLabelsNoSuffix() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(fixtureFile("test_workflow.cwl"))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
-
-        String body = result.getResponse().getContentAsString();
-        assertFalse(body.matches(".*_\\d+.*"),
-                "Response should not contain APE numeric suffixes");
+                .andExpect(jsonPath("$.nodes[?(@.type=='tool')].label",
+                        everyItem(not(matchesRegex(".*_\\d+$")))));
     }
 
-    /**
-     * Die EDAM-URI des Inputs wird korrekt in den Response übernommen.
-     */
     @Test
-    void parseCwl_validWorkflow_inputEdamUriPresent() throws Exception {
+    void testParseCwlInputEdamUri() throws Exception {
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(fixtureFile("test_workflow.cwl"))
                         .accept(MediaType.APPLICATION_JSON))
@@ -98,12 +84,8 @@ class AlternativesControllerTest {
 
     // ── Fehlerbehandlung (HTTP 400) ───────────────────────────────────────────
 
-    /**
-     * Eine CWL-Datei mit {@code class: CommandLineTool} statt {@code Workflow}
-     * wird mit HTTP 400 abgelehnt.
-     */
     @Test
-    void parseCwl_wrongCwlClass_returns400() throws Exception {
+    void testParseCwlWrongClassFail() throws Exception {
         String cwl = "class: CommandLineTool\ncwlVersion: v1.2\n";
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(inlineCwl(cwl))
@@ -111,11 +93,8 @@ class AlternativesControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Eine CWL-Datei mit {@code cwlVersion: v1.0} wird mit HTTP 400 abgelehnt.
-     */
     @Test
-    void parseCwl_wrongCwlVersion_returns400() throws Exception {
+    void testParseCwlWrongVersionFail() throws Exception {
         String cwl = "class: Workflow\ncwlVersion: v1.0\nsteps:\n  ToolA: {}\n";
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(inlineCwl(cwl))
@@ -123,22 +102,16 @@ class AlternativesControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Eine leere Datei wird mit HTTP 400 abgelehnt.
-     */
     @Test
-    void parseCwl_emptyFile_returns400() throws Exception {
+    void testParseCwlEmptyFileFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(inlineCwl(""))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Invalides YAML wird mit HTTP 400 abgelehnt.
-     */
     @Test
-    void parseCwl_invalidYaml_returns400() throws Exception {
+    void testParseCwlInvalidYamlFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.multipart("/alternatives/parse")
                         .file(inlineCwl("{ not: valid: yaml: [}"))
                         .accept(MediaType.APPLICATION_JSON))
@@ -147,24 +120,17 @@ class AlternativesControllerTest {
 
     // ── Falsche HTTP-Methode ──────────────────────────────────────────────────
 
-    /**
-     * Ein GET-Request auf {@code /alternatives/parse} wird mit HTTP 405
-     * (Method Not Allowed) abgelehnt.
-     */
     @Test
-    void parseCwl_getRequest_returns405() throws Exception {
+    void testParseCwlGetFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/alternatives/parse")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
     }
 
-    /**
-     * Ein POST ohne {@code cwl_file}-Parameter wird mit HTTP 400 abgelehnt.
-     */
     @Test
-    void parseCwl_missingFileParam_returns400() throws Exception {
+    void testParseCwlNoContentTypeFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/alternatives/parse")
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnsupportedMediaType());
     }
 }

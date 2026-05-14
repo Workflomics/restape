@@ -11,10 +11,6 @@ import java.util.function.UnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * T-PAR-01: Verifikation der korrekten Knoten- und Kanten-Extraktion (FA 1).
- * T-ROB-01: Robustheit bei ungültigen oder unvollständigen CWL-Dateien (NFA 4).
- */
 @SpringBootTest
 class CwlParserTest {
 
@@ -28,17 +24,17 @@ class CwlParserTest {
         return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ── T-PAR-01 ─────────────────────────────────────────────────────────────
+    // ── Parsing ──────────────────────────────────────────────────────────────
 
     @Test
-    void T_PAR_01_correctNodeCount() throws Exception {
+    void testParseCorrectNodeCount() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         // 1 input node + 3 tool nodes + 1 output node
         assertEquals(5, result.getNodes().size());
     }
 
     @Test
-    void T_PAR_01_toolNodesHaveSuffixStripped() throws Exception {
+    void testParseToolLabelsNoSuffix() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         long toolCount = result.getNodes().stream()
                 .filter(n -> "tool".equals(n.getType()))
@@ -51,14 +47,14 @@ class CwlParserTest {
     }
 
     @Test
-    void T_PAR_01_correctEdgeCount() throws Exception {
+    void testParseCorrectEdgeCount() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         // input→A, A→B, B→C, C→output = 4 edges
         assertEquals(4, result.getEdges().size());
     }
 
     @Test
-    void T_PAR_01_dataflowOrder() throws Exception {
+    void testParseDataflowOrder() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         assertTrue(result.getEdges().stream()
                 .anyMatch(e -> "ToolA_01".equals(e.getSource()) && "ToolB_01".equals(e.getTarget())));
@@ -67,7 +63,7 @@ class CwlParserTest {
     }
 
     @Test
-    void T_PAR_01_inputOutputTuplesExtracted() throws Exception {
+    void testParseInputOutputTuples() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         assertEquals(1, result.getInputs().size());
         assertEquals(1, result.getOutputs().size());
@@ -75,31 +71,31 @@ class CwlParserTest {
         assertEquals("http://edamontology.org/format_3244", result.getOutputs().get(0).getId());
     }
 
-    // ── T-ROB-01 ─────────────────────────────────────────────────────────────
+    // ── Robustheit ───────────────────────────────────────────────────────────
 
     @Test
-    void T_ROB_01_wrongCwlClass() {
+    void testParseWrongClassFail() {
         String doc = "class: CommandLineTool\ncwlVersion: v1.2\n";
         assertThrows(IllegalArgumentException.class,
                 () -> CwlParser.parse(cwl(doc), IDENTITY));
     }
 
     @Test
-    void T_ROB_01_wrongCwlVersion() {
+    void testParseWrongVersionFail() {
         String doc = "class: Workflow\ncwlVersion: v1.0\nsteps:\n  ToolA: {}\n";
         assertThrows(IllegalArgumentException.class,
                 () -> CwlParser.parse(cwl(doc), IDENTITY));
     }
 
     @Test
-    void T_ROB_01_emptyStepsSection() {
+    void testParseEmptyStepsFail() {
         String doc = "class: Workflow\ncwlVersion: v1.2\nsteps: {}\n";
         assertThrows(IllegalArgumentException.class,
                 () -> CwlParser.parse(cwl(doc), IDENTITY));
     }
 
     @Test
-    void T_ROB_01_missingEdamAnnotationsDoesNotThrow() throws Exception {
+    void testParseMissingEdamAnnotations() throws Exception {
         String doc = """
                 class: Workflow
                 cwlVersion: v1.2
@@ -123,13 +119,13 @@ class CwlParserTest {
     }
 
     @Test
-    void T_ROB_01_emptyFile() {
+    void testParseEmptyFileFail() {
         assertThrows(IllegalArgumentException.class,
                 () -> CwlParser.parse(cwl(""), IDENTITY));
     }
 
     @Test
-    void T_ROB_01_invalidYaml() {
+    void testParseInvalidYamlFail() {
         assertThrows(IllegalArgumentException.class,
                 () -> CwlParser.parse(cwl("{ not: valid: yaml: [}"), IDENTITY));
     }

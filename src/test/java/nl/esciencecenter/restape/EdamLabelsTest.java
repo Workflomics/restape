@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * T-TAX-01: Verifikation der O(1)-URI-Auflösung nach Initialisierung (NFA 2).
+ * Verifikation der O(1)-URI-Auflösung nach Initialisierung.
  *
  * Das Laden der OWL-Ontologie wird per Reflection umgangen, um die Tests
  * netzwerkunabhängig zu halten. Getestet wird die Map-Lookup-Logik und der
@@ -38,32 +38,32 @@ class EdamLabelsTest {
     }
 
     @Test
-    void T_TAX_01_knownUriReturnsLabel() {
+    void testResolveKnownUri() {
         assertEquals("LocARNA PP", edamLabels.resolve("http://edamontology.org/format_3728"));
     }
 
     @Test
-    void T_TAX_01_secondKnownUriReturnsLabel() {
+    void testResolveSecondKnownUri() {
         assertEquals("mzXML", edamLabels.resolve("http://edamontology.org/format_3244"));
     }
 
     @Test
-    void T_TAX_01_unknownUriFallsBackToShortForm() {
+    void testResolveUnknownUriFallback() {
         assertEquals("format_9999", edamLabels.resolve("http://edamontology.org/format_9999"));
     }
 
     @Test
-    void T_TAX_01_nullInputReturnsEmpty() {
+    void testResolveNullReturnsEmpty() {
         assertEquals("", edamLabels.resolve(null));
     }
 
     @Test
-    void T_TAX_01_blankInputReturnsEmpty() {
+    void testResolveBlankReturnsEmpty() {
         assertEquals("", edamLabels.resolve("   "));
     }
 
     @Test
-    void T_TAX_01_lookupIsO1_notLinearSearch() {
+    void testResolveLookupIsO1() {
         // After initialization the backing structure is a HashMap — verify by
         // measuring that 1 000 consecutive lookups complete well under 50 ms.
         long start = System.nanoTime();
@@ -76,17 +76,17 @@ class EdamLabelsTest {
     }
 
     @Test
-    void T_TAX_01_shortFormHashFragment() {
+    void testShortFormHashFragment() {
         assertEquals("label", EdamLabels.shortForm("http://example.org#label"));
     }
 
     @Test
-    void T_TAX_01_shortFormSlashPath() {
+    void testShortFormSlashPath() {
         assertEquals("format_3728", EdamLabels.shortForm("http://edamontology.org/format_3728"));
     }
 
     @Test
-    void T_TAX_01_resolveBeforeLoadFallsBackToShortForm() throws Exception {
+    void testResolveBeforeLoadFallback() throws Exception {
         EdamLabels uninitialised = new EdamLabels();
         // labels field is null → should return short form, not throw
         assertEquals("format_3728", uninitialised.resolve("http://edamontology.org/format_3728"));
