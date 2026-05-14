@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,16 +26,6 @@ public class AlternativesController {
 
     @Autowired
     private EdamLabels edamLabels;
-
-    /**
-     * Ensures the EDAM label index is ready. Blocks until loading completes.
-     * The frontend calls this on page mount to trigger loading before the first upload.
-     */
-    @GetMapping("/warm")
-    public ResponseEntity<Void> warm() {
-        edamLabels.ensureLoaded();
-        return ResponseEntity.ok().build();
-    }
 
     /**
      * Parses a CWL v1.2 workflow and returns its DAG representation plus
