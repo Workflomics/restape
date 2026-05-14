@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,16 @@ public class AlternativesController {
     private EdamLabels edamLabels;
 
     /**
+     * Ensures the EDAM label index is ready. Blocks until loading completes.
+     * The frontend calls this on page mount to trigger loading before the first upload.
+     */
+    @GetMapping("/warm")
+    public ResponseEntity<Void> warm() {
+        edamLabels.ensureLoaded();
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Parses a CWL v1.2 workflow and returns its DAG representation plus
      * workflow-level I/O terms for use as APE synthesis constraints (concept §2.3, §3.2).
      */
@@ -48,6 +59,7 @@ public class AlternativesController {
             })
     public ResponseEntity<ParseResponse> parseCwl(
             @RequestParam("cwl_file") MultipartFile cwlFile) throws IOException {
+        edamLabels.ensureLoaded();
         ParseResponse response = CwlParser.parse(cwlFile.getInputStream(), edamLabels::resolve);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
     }
