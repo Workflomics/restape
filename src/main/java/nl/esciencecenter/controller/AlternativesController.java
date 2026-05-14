@@ -18,14 +18,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import nl.esciencecenter.controller.dto.ParseResponse;
 import nl.esciencecenter.restape.CwlParser;
-import nl.esciencecenter.restape.EDAMTaxonomyService;
+import nl.esciencecenter.restape.EdamLabels;
 
 @RestController
 @RequestMapping("/alternatives")
 public class AlternativesController {
 
     @Autowired
-    private EDAMTaxonomyService taxonomyService;
+    private EdamLabels edamLabels;
 
     /**
      * Parses a CWL v1.2 workflow and returns its DAG representation plus
@@ -48,7 +48,7 @@ public class AlternativesController {
             })
     public ResponseEntity<ParseResponse> parseCwl(
             @RequestParam("cwl_file") MultipartFile cwlFile) throws IOException {
-        ParseResponse response = CwlParser.parse(cwlFile.getInputStream(), taxonomyService::resolveLabel);
+        ParseResponse response = CwlParser.parse(cwlFile.getInputStream(), edamLabels::resolve);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
