@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import nl.uu.cs.ape.solver.solutionStructure.SolutionWorkflow;
 
 /**
@@ -12,6 +14,8 @@ import nl.uu.cs.ape.solver.solutionStructure.SolutionWorkflow;
  * including descriptive names, descriptions, the length of the solution, and benchmark information.
  * It provides functionality to convert these details into a JSONObject for serialization or further processing.
  */
+@Getter
+@NoArgsConstructor
 public class APEWorkflowMetadata {
     
     @JsonProperty("workflow_name")
@@ -32,17 +36,6 @@ public class APEWorkflowMetadata {
     private String figureName;
     @JsonProperty("benchmark_file")
     private String benchmarkFile; // Optional, indicates if benchmark data should be included.
-
-    public APEWorkflowMetadata() {}
-
-    public String getWorkflowName() { return workflowName; }
-    public String getDescriptiveName() { return descriptiveName; }
-    public String getDescription() { return description; }
-    public int getWorkflowLength() { return workflowLength; }
-    public String getRunId() { return runId; }
-    public String getCwlName() { return cwlName; }
-    public String getFigureName() { return figureName; }
-    public String getBenchmarkFile() { return benchmarkFile; }
 
     /**
      * Constructs a APEWorkflowMetadata instance from a given SolutionWorkflow and run configuration.

@@ -5,8 +5,9 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -14,11 +15,9 @@ import okhttp3.Response;
  * The {@code BioToolsRestClient} class provides methods to retrieve and process tool metrics
  * provided by bio.tools API.
  */
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BioToolsRestClient {
-
-    private static final Logger log = LoggerFactory.getLogger(BioToolsRestClient.class);
-
-    private BioToolsRestClient() {}
 
     private static final okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
  
