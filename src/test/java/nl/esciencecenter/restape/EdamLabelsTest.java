@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Verifikation der O(1)-URI-Auflösung nach Initialisierung.
  *
- * Das Laden der OWL-Ontologie wird per Reflection umgangen, um die Tests
- * netzwerkunabhängig zu halten. Getestet wird die Map-Lookup-Logik und der
- * shortForm-Fallback.
+ * Das Laden von edam_labels.json wird per Reflection umgangen, um die Tests
+ * von Classpath-Ressourcen unabhängig zu halten. Getestet wird die
+ * Map-Lookup-Logik und der shortForm-Fallback.
  */
 @SpringBootTest
 class EdamLabelsTest {
@@ -30,7 +30,7 @@ class EdamLabelsTest {
         ));
     }
 
-    /** Injects a pre-built map to bypass OWL loading. */
+    /** Injects a pre-built map to bypass JSON file loading. */
     private void injectLabels(Map<String, String> map) throws Exception {
         Field field = EdamLabels.class.getDeclaredField("labels");
         field.setAccessible(true);
