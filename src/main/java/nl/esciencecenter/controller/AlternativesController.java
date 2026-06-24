@@ -29,7 +29,7 @@ public class AlternativesController {
 
     /**
      * Parses a CWL v1.2 workflow and returns its DAG representation plus
-     * workflow-level I/O terms for use as APE synthesis constraints (concept §2.3, §3.2).
+     * workflow-level I/O terms for use as APE synthesis constraints.
      */
     @PostMapping(value = "/parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(

@@ -20,8 +20,7 @@ import nl.esciencecenter.controller.dto.GraphNode;
 import nl.esciencecenter.controller.dto.ParseResponse;
 
 /**
- * Transforms a CWL v1.2 Workflow document into the graph-optimised ParseResponse
- * following the extraction algorithm defined in concept chapter 3.2.
+ * Transforms a CWL v1.2 Workflow document into the graph-optimised ParseResponse.
  */
 public class CwlParser {
 
