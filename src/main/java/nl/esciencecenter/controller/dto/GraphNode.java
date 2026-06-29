@@ -1,17 +1,21 @@
 package nl.esciencecenter.controller.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class GraphNode {
     private final String id;
     private final String label;
-    private final String type; // "tool" | "input" | "output"
+    private final NodeType type;
 
-    public GraphNode(String id, String label, String type) {
-        this.id = id;
-        this.label = label;
-        this.type = type;
+    /**
+     * Kind of node in the workflow graph. Constants are lowercase so Jackson
+     * serialises them as {@code "input"}/{@code "tool"}/{@code "output"} for the
+     * frontend (matching the existing {@code ImageFormat} enum convention).
+     */
+    public enum NodeType {
+        input, tool, output
     }
-
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public String getType() { return type; }
 }

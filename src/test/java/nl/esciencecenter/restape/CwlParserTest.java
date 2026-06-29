@@ -1,5 +1,6 @@
 package nl.esciencecenter.restape;
 
+import nl.esciencecenter.controller.dto.GraphNode;
 import nl.esciencecenter.controller.dto.ParseResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,11 +38,11 @@ class CwlParserTest {
     void testParseToolLabelsNoSuffix() throws Exception {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         long toolCount = result.getNodes().stream()
-                .filter(n -> "tool".equals(n.getType()))
+                .filter(n -> n.getType() == GraphNode.NodeType.tool)
                 .count();
         assertEquals(3, toolCount);
         result.getNodes().stream()
-                .filter(n -> "tool".equals(n.getType()))
+                .filter(n -> n.getType() == GraphNode.NodeType.tool)
                 .forEach(n -> assertFalse(n.getLabel().matches(".*_\\d+$"),
                         "Tool label should not contain APE suffix: " + n.getLabel()));
     }
@@ -114,7 +115,7 @@ class CwlParserTest {
                     out: [output_1]
                 """;
         ParseResponse result = CwlParser.parse(cwl(doc), IDENTITY);
-        assertEquals(1, result.getNodes().stream().filter(n -> "tool".equals(n.getType())).count());
+        assertEquals(1, result.getNodes().stream().filter(n -> n.getType() == GraphNode.NodeType.tool).count());
         assertTrue(result.getInputs().isEmpty(), "No EDAM tuples without format annotations");
     }
 

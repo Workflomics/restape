@@ -67,7 +67,7 @@ public class CwlParser {
             for (Map.Entry<String, Object> entry : inputsSection.entrySet()) {
                 String id    = entry.getKey();
                 String label = formatLabel(entry.getValue(), id, labelResolver);
-                nodes.add(new GraphNode(id, label, "input"));
+                nodes.add(new GraphNode(id, label, GraphNode.NodeType.input));
                 inputIds.add(id);
             }
         }
@@ -75,7 +75,7 @@ public class CwlParser {
         // Step 2b – Tool nodes
         Set<String> stepIds = stepsSection.keySet();
         for (String stepId : stepIds) {
-            nodes.add(new GraphNode(stepId, toolLabel(stepId), "tool"));
+            nodes.add(new GraphNode(stepId, toolLabel(stepId), GraphNode.NodeType.tool));
         }
 
         // Step 2c – Output nodes + remember which step feeds each output
@@ -84,7 +84,7 @@ public class CwlParser {
             for (Map.Entry<String, Object> entry : outputsSection.entrySet()) {
                 String id    = entry.getKey();
                 String label = formatLabel(entry.getValue(), id, labelResolver);
-                nodes.add(new GraphNode(id, label, "output"));
+                nodes.add(new GraphNode(id, label, GraphNode.NodeType.output));
 
                 if (entry.getValue() instanceof Map<?, ?> def) {
                     String src = (String) ((Map<String, Object>) def).get("outputSource");
