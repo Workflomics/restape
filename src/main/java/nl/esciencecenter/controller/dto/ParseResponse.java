@@ -5,11 +5,11 @@ import java.util.List;
 public class ParseResponse {
     private final List<GraphNode> nodes;
     private final List<GraphEdge> edges;
-    private final List<ApeTaxTuple> inputs;
-    private final List<ApeTaxTuple> outputs;
+    private final List<TaxonomyElem> inputs;
+    private final List<TaxonomyElem> outputs;
 
     public ParseResponse(List<GraphNode> nodes, List<GraphEdge> edges,
-            List<ApeTaxTuple> inputs, List<ApeTaxTuple> outputs) {
+            List<TaxonomyElem> inputs, List<TaxonomyElem> outputs) {
         this.nodes = nodes;
         this.edges = edges;
         this.inputs = inputs;
@@ -18,6 +18,6 @@ public class ParseResponse {
 
     public List<GraphNode> getNodes() { return nodes; }
     public List<GraphEdge> getEdges() { return edges; }
-    public List<ApeTaxTuple> getInputs() { return inputs; }
-    public List<ApeTaxTuple> getOutputs() { return outputs; }
+    public List<TaxonomyElem> getInputs() { return inputs; }
+    public List<TaxonomyElem> getOutputs() { return outputs; }
 }

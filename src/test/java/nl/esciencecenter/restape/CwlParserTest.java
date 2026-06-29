@@ -67,8 +67,8 @@ class CwlParserTest {
         ParseResponse result = CwlParser.parse(fixture("test_workflow.cwl"), IDENTITY);
         assertEquals(1, result.getInputs().size());
         assertEquals(1, result.getOutputs().size());
-        assertEquals("http://edamontology.org/format_3728", result.getInputs().get(0).getId());
-        assertEquals("http://edamontology.org/format_3244", result.getOutputs().get(0).getId());
+        assertEquals("http://edamontology.org/format_3728", result.getInputs().get(0).id);
+        assertEquals("http://edamontology.org/format_3244", result.getOutputs().get(0).id);
     }
 
     // ── Robustheit ───────────────────────────────────────────────────────────

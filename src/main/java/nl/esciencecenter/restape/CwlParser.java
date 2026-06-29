@@ -14,10 +14,10 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import nl.esciencecenter.controller.dto.ApeTaxTuple;
 import nl.esciencecenter.controller.dto.GraphEdge;
 import nl.esciencecenter.controller.dto.GraphNode;
 import nl.esciencecenter.controller.dto.ParseResponse;
+import nl.esciencecenter.controller.dto.TaxonomyElem;
 
 /**
  * Transforms a CWL v1.2 Workflow document into the graph-optimised ParseResponse.
@@ -124,8 +124,8 @@ public class CwlParser {
             edges.add(new GraphEdge(sourceId, outputId)));
 
         // Step 4 – EDAM tuples for APE synthesis constraints
-        List<ApeTaxTuple> inputs  = extractTuples(inputsSection,  labelResolver);
-        List<ApeTaxTuple> outputs = extractTuples(outputsSection, labelResolver);
+        List<TaxonomyElem> inputs  = extractTuples(inputsSection,  labelResolver);
+        List<TaxonomyElem> outputs = extractTuples(outputsSection, labelResolver);
 
         return new ParseResponse(nodes, edges, inputs, outputs);
     }
@@ -164,14 +164,14 @@ public class CwlParser {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<ApeTaxTuple> extractTuples(Map<String, Object> section, UnaryOperator<String> resolver) {
-        List<ApeTaxTuple> tuples = new ArrayList<>();
+    private static List<TaxonomyElem> extractTuples(Map<String, Object> section, UnaryOperator<String> resolver) {
+        List<TaxonomyElem> tuples = new ArrayList<>();
         if (section == null) return tuples;
         for (Map.Entry<String, Object> entry : section.entrySet()) {
             if (!(entry.getValue() instanceof Map<?, ?> def)) continue;
             String uri = (String) ((Map<String, Object>) def).get("format");
             if (uri == null) continue;
-            tuples.add(new ApeTaxTuple(uri, resolver.apply(uri)));
+            tuples.add(new TaxonomyElem(uri, resolver.apply(uri), null, null));
         }
         return tuples;
     }
