@@ -259,7 +259,7 @@ public class ApeAPI {
         runConfig.setNoGraphs(maxSol);
         runConfig.setDebugMode(true);
 
-        bool createPartialScripts = runConfig.getCreatePartialScripts();
+        boolean createPartialScripts = runConfig.getCreatePartialScripts();
 
         // run the synthesis and retrieve the solutions
         SolutionsList candidateSolutions = apeFramework.runSynthesis(runConfig);
