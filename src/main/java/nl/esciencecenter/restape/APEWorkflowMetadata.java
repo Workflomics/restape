@@ -56,14 +56,14 @@ public class APEWorkflowMetadata {
 
         String fileName = sol.getFileName();
 
-        Path cwlPath = RestApeUtils.calculatePath(runID, "CWL", fileName);
+        Path cwlPath = RestApeUtils.calculatePath(runID, "CWL", fileName + ".cwl");
         if(Files.notExists(cwlPath)) {
             this.cwlName = "";
         } else {
             this.cwlName = fileName + ".cwl";
         }
 
-        Path smkPath = RestApeUtils.calculatePath(runID, "Snakemake", fileName);
+        Path smkPath = RestApeUtils.calculatePath(runID, "Snakemake", fileName + ".smk");
         if(Files.notExists(smkPath)) {
             this.snakemakeName = "";
         } else {
