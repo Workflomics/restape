@@ -50,6 +50,9 @@ public class APEConfig {
     @JsonProperty("number_of_cwl_files")
     private int numberOfCwlFiles;
 
+    @JsonProperty("number_of_snakemake_files")
+    private int numberOfSnakemakeFiles;
+
     @JsonProperty("tool_seq_repeat")
     private boolean toolSeqRepeat;
 

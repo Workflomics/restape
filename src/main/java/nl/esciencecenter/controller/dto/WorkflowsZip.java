@@ -1,5 +1,6 @@
 package nl.esciencecenter.controller.dto;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import nl.esciencecenter.restape.RestApeUtils;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CWLZip {
+public class WorkflowsZip {
     @JsonProperty("run_id")
     private String runID;
     private List<String> workflows;
@@ -51,7 +52,7 @@ public class CWLZip {
 
     /**
      * Check whether all the workflows are valid CWL file names.
-     * @param workflows2 
+     * @param workflows The workflows to verify
      * 
      * @return true if all the workflows are valid CWL file names, false otherwise.
      */
@@ -71,14 +72,35 @@ public class CWLZip {
     }
 
     /**
-     * Get the paths to the CWL files and the SVG files.
-     * 
-     * @return List of paths to the CWL files and the SVG files.
+     * Get the paths to the Snakemake files.
+     *
+     * @return List of paths to the Snakemake files.
      */
-    public List<Path> getCWLandSVGPaths() {
+    public List<Path> getSnakemakePaths() {
+        return workflows.stream()
+                .map(fileName -> RestApeUtils.calculatePath(runID, "Snakemake", fileName))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the paths to the existing CWL, Snakemake and the SVG files.
+     * 
+     * @return List of paths to the existing CWL, Snakemake and the SVG files.
+     */
+    public List<Path> getAllPaths() {
         List<Path> paths = new ArrayList<>();
         for (String fileName : workflows) {
-            paths.add(RestApeUtils.calculatePath(runID, "CWL", fileName));
+
+            Path cwlPath = RestApeUtils.calculatePath(runID, "CWL", fileName);
+            if(Files.exists(cwlPath)) {
+                paths.add(cwlPath);
+            }
+
+            Path smkPath = RestApeUtils.calculatePath(runID, "Snakemake", fileName.replace(".cwl", ".smk"));
+            if(Files.exists(smkPath)) {
+                paths.add(smkPath);
+            }
+
             paths.add(RestApeUtils.calculatePath(runID, "Figures", fileName.replace(".cwl", ".svg")));
         }
         return paths;

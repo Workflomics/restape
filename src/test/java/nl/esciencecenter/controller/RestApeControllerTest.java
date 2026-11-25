@@ -131,6 +131,37 @@ class RestApeControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Test the snakemake method with POST and a valid configuration file.
+     *
+     * @throws Exception
+     */
+    @Test
+    void testRunSnakemakeExtraction() throws Exception {
+
+        String configPath = "https://raw.githubusercontent.com/Workflomics/tools-and-domains/refs/heads/main/domains/proteomics/config.json";
+        String content = FileUtils.readFileToString(APEFiles.readPathToFile(configPath),
+                StandardCharsets.UTF_8);
+
+        JSONObject jsonObject = new JSONObject(content);
+        jsonObject.put("solutions", "1");
+        jsonObject.put("number_of_snakemake_files", "10");
+
+        List<APEWorkflowMetadata> result = ApeAPI.runSynthesis(jsonObject, false);
+        assertFalse(result.isEmpty(), "The encoding should be SAT.");
+        String runID = result.get(0).getRunId();
+        String snakeFile = result.get(0).getSnakemakeName();
+
+        String jsonContent = "{\"run_id\": \"" + runID + "\", \"file_name\": \"" + snakeFile + "\"}";
+
+        mvc.perform(MockMvcRequestBuilders.post("/snakemake")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON).content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/x-yaml"));
+
+    }
+
     @Test
     void testPostZipCWLs() throws Exception {
 

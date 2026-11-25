@@ -31,6 +31,9 @@ public class Workflow {
     private String cwlFilePath;
 
     @Column
+    private String snakemakeFilePath;
+
+    @Column
     private String pngFilePath;
 
     @Column

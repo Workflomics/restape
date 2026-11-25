@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nl.uu.cs.ape.solver.solutionStructure.SolutionWorkflow;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * The {@link APEWorkflowMetadata} class represents metadata for a workflow solution from the APE solver.
  * This class encapsulates the details and metadata of a workflow solution,
@@ -30,6 +33,8 @@ public class APEWorkflowMetadata {
     private String runId;
     @JsonProperty("cwl_name")
     private String cwlName;
+    @JsonProperty("snakemake_name")
+    private String snakemakeName;
     @JsonProperty("figure_name")
     private String figureName;
     @JsonProperty("benchmark_file")
@@ -48,10 +53,26 @@ public class APEWorkflowMetadata {
         this.description = sol.getDescription();
         this.workflowLength = sol.getSolutionLength();
         this.runId = runID;
-        this.cwlName = sol.getFileName() + ".cwl";
-        this.figureName = sol.getFileName();
+
+        String fileName = sol.getFileName();
+
+        Path cwlPath = RestApeUtils.calculatePath(runID, "CWL", fileName + ".cwl");
+        if(Files.notExists(cwlPath)) {
+            this.cwlName = "";
+        } else {
+            this.cwlName = fileName + ".cwl";
+        }
+
+        Path smkPath = RestApeUtils.calculatePath(runID, "Snakemake", fileName + ".smk");
+        if(Files.notExists(smkPath)) {
+            this.snakemakeName = "";
+        } else {
+            this.snakemakeName = fileName + ".smk";
+        }
+
+        this.figureName = fileName;
         if (benchmark) {
-            this.benchmarkFile = sol.getFileName() + ".json";
+            this.benchmarkFile = fileName + ".json";
         }
     }
 
@@ -70,6 +91,7 @@ public class APEWorkflowMetadata {
         json.put("workflow_length", this.workflowLength);
         json.put("run_id", this.runId);
         json.put("cwl_name", this.cwlName);
+        json.put("snakemake_name", this.snakemakeName);
         json.put("figure_name", this.figureName);
         if (this.benchmarkFile != null) {
             json.put("benchmark_file", this.benchmarkFile);

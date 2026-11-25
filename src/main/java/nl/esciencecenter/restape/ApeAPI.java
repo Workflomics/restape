@@ -246,10 +246,27 @@ public class ApeAPI {
         // Define the synthesis run ID
         String runID = RestApeUtils.generateRunID(configJson.toString());
 
-        SolutionsList candidateSolutions = executeSynthesis(configJson, runID);
+        String solutionPath = RestApeUtils.createDirectory(runID);
 
-        // Write solutions (as CWL files and figures) to the file system.
-        APE.writeCWLWorkflows(candidateSolutions);
+        APE apeFramework = new APE(configJson);
+
+        APERunConfig runConfig = new APERunConfig(configJson, apeFramework.getDomainSetup());
+
+        runConfig.setSolutionPath(solutionPath);
+        int maxSol = runConfig.getMaxNoSolutions();
+        runConfig.setNoCWL(maxSol);
+        runConfig.setNoSnakemake(maxSol);
+        runConfig.setNoGraphs(maxSol);
+        runConfig.setDebugMode(true);
+
+        boolean createPartialScripts = runConfig.getCreatePartialScripts();
+
+        // run the synthesis and retrieve the solutions
+        SolutionsList candidateSolutions = apeFramework.runSynthesis(runConfig);
+
+        // Write solutions (as CWL and Snakemake files and figures) to the file system.
+        APE.writeCWLWorkflows(candidateSolutions, createPartialScripts);
+        APE.writeSnakemakeWorkflows(candidateSolutions, createPartialScripts);
         APE.writeTavernaDesignGraphs(candidateSolutions, Format.SVG);
         APE.writeTavernaDesignGraphs(candidateSolutions, Format.PNG);
 
@@ -287,6 +304,7 @@ public class ApeAPI {
         runConfig.setSolutionPath(solutionPath);
         int maxSol = runConfig.getMaxNoSolutions();
         runConfig.setNoCWL(maxSol);
+        runConfig.setNoSnakemake(maxSol);
         runConfig.setNoGraphs(maxSol);
         runConfig.setDebugMode(true);
         // run the synthesis and retrieve the solutions

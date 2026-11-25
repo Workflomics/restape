@@ -29,7 +29,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import nl.esciencecenter.controller.dto.APEConfig;
 import nl.esciencecenter.controller.dto.CWLFileInfo;
-import nl.esciencecenter.controller.dto.CWLZip;
+import nl.esciencecenter.controller.dto.SnakeFileInfo;
+import nl.esciencecenter.controller.dto.WorkflowsZip;
 import nl.esciencecenter.controller.dto.ConstraintElem;
 import nl.esciencecenter.controller.dto.ImgFileInfo;
 import nl.esciencecenter.controller.dto.TaxonomyElem;
@@ -349,7 +350,7 @@ public class RestApeController {
                 description = "Retrieve a cwl file from the file system, describing the workflow.",
                 tags = {"Download"},
                 requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                        description = "JSON object containing the information for retrieving the CWL file, including the name of the CWL file (as 'figure_name') and the ID of the corresponding synthesis run.",
+                        description = "JSON object containing the information for retrieving the CWL file, including the name of the CWL file (as 'cwl_name') and the ID of the corresponding synthesis run.",
                         required = true,
                         content = @Content(
                                 mediaType = "application/json",
@@ -366,6 +367,40 @@ public class RestApeController {
                 Path path = cwlInfoJson.calculatePath();
                 return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/x-yaml"))
                                 .body(IOUtils.getLocalCwlFile(path));
+        }
+
+        /**
+         * Retrieve the solution CWL workflow based on the provided run ID and a
+         * candidate solution.
+         *
+         * @param fileName Name of the Snakemake file (provided under 'name' after the
+         *                 synthesis run).
+         * @param runID    ID of the corresponding synthesis run (provided under
+         *                 'run_id' after the synthesis run).
+         * @return Snakemake file representing the workflow.
+         */
+        @PostMapping("/snakemake")
+        @Operation(summary = "Retrieve a Snakemake file",
+                description = "Retrieve a Snakemake file from the file system, describing the workflow.",
+                tags = {"Download"},
+                requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                        description = "JSON object containing the information for retrieving the Snakemake file, including the name of the Snakemake file (as 'snakemake_name') and the ID of the corresponding synthesis run.",
+                        required = true,
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = SnakeFileInfo.class))
+                ),
+                responses = {
+                        @ApiResponse(responseCode = "200", description = "Successful operation. Snakemake file describing the workflow is provided.", content = @Content(mediaType = "application/x-yaml")),
+                        @ApiResponse(responseCode = "400", description = "Invalid input"),
+                        @ApiResponse(responseCode = "404", description = "Not found")
+                })
+        public ResponseEntity<String> postSnakemake(
+                @RequestBody(required = true) SnakeFileInfo snakeInfoJson) throws IOException {
+
+            Path path = snakeInfoJson.calculatePath();
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/x-yaml"))
+                    .body(IOUtils.getLocalSnakemakeFile(path));
         }
 
         /**
@@ -461,26 +496,26 @@ public class RestApeController {
          * @return CWL file representing the workflow.
          */
         @PostMapping("/cwl_zip")
-        @Operation(summary = "Retrieve the zip of cwl files.",
-                description = "Retrieve the zip comprising CWL files specified in the request body. The request body should be a JSON object with the following fields: 'run_id' and 'workflows'. The 'run_id' field specifies the ID of the synthesis run, while the 'workflows' field is a list of CWL file names.",
+        @Operation(summary = "Retrieve the zip of cwl and Snakemake files.",
+                description = "Retrieve the zip comprising CWL and Snakemake files specified in the request body. The request body should be a JSON object with the following fields: 'run_id' and 'workflows'. The 'run_id' field specifies the ID of the synthesis run, while the 'workflows' field is a list of CWL and Snakemake file names.",
                 tags = {"Download"},
                 requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "JSON object containing the following fields: 'run_id' and 'workflows'.",
                 required = true,
-                content = @Content(schema = @Schema(implementation = CWLZip.class))
+                content = @Content(schema = @Schema(implementation = WorkflowsZip.class))
                 ),
                 responses = {
                         @ApiResponse(responseCode = "200", 
-                                description = "Successful operation. A zip file comprising specified CWL files is returned.",
+                                description = "Successful operation. A zip file comprising specified CWL and Snakemake files is returned.",
                                 content = @Content(mediaType = "application/zip")),
                         @ApiResponse(responseCode = "400", description = "Invalid input"),
                         @ApiResponse(responseCode = "404", description = "Not found"),
                         @ApiResponse(responseCode = "500", description = "Internal server error")
                 })
         public ResponseEntity<?> postZipCWLs(
-                        @RequestBody(required = true) CWLZip cwlZipInfo) {
+                        @RequestBody(required = true) WorkflowsZip workflowsZipInfo) {
                 try {
-                        Path zipPath = IOUtils.zipFilesForLocalExecution(cwlZipInfo);
+                        Path zipPath = IOUtils.zipFilesForLocalExecution(workflowsZipInfo);
 
                         Resource zipResource = new UrlResource(zipPath.toUri());
                         String zipContentType = Files.probeContentType(zipPath);
