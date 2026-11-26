@@ -1,5 +1,6 @@
 package nl.esciencecenter.controller.dto;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,15 +83,24 @@ public class WorkflowsZip {
     }
 
     /**
-     * Get the paths to the CWL, Snakemake and the SVG files.
+     * Get the paths to the existing CWL, Snakemake and the SVG files.
      * 
-     * @return List of paths to the CWL, Snakemake and the SVG files.
+     * @return List of paths to the existing CWL, Snakemake and the SVG files.
      */
     public List<Path> getAllPaths() {
         List<Path> paths = new ArrayList<>();
         for (String fileName : workflows) {
-            paths.add(RestApeUtils.calculatePath(runID, "CWL", fileName));
-            paths.add(RestApeUtils.calculatePath(runID, "Snakemake", fileName.replace(".cwl", ".smk")));
+
+            Path cwlPath = RestApeUtils.calculatePath(runID, "CWL", fileName);
+            if(Files.exists(cwlPath)) {
+                paths.add(cwlPath);
+            }
+
+            Path smkPath = RestApeUtils.calculatePath(runID, "Snakemake", fileName.replace(".cwl", ".smk"));
+            if(Files.exists(smkPath)) {
+                paths.add(smkPath);
+            }
+
             paths.add(RestApeUtils.calculatePath(runID, "Figures", fileName.replace(".cwl", ".svg")));
         }
         return paths;
