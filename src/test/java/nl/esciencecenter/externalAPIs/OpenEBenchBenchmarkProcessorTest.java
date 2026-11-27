@@ -1,6 +1,6 @@
 package nl.esciencecenter.externalAPIs;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,7 @@ class OpenEBenchBenchmarkProcessorTest {
                 """);
 
         // Testing the isOSIFromOEBMetrics method and asserting that the OSI status is
-        // true
-        assertTrue(OpenEBenchBenchmarkProcessor.isOSIFromOEBMetrics(mockToolMetrics) == LicenseType.OSI_Approved,
+        assertSame(LicenseType.OSI_Approved, OpenEBenchBenchmarkProcessor.isOSIFromOEBMetrics(mockToolMetrics),
                 "The method should return true for OSI license");
     }
 }
