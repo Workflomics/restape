@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.workflomics</groupId>
 	<artifactId>restape</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<name>restape</name>
 	<description>RESTful API for the APE library</description>
 	<licenses>

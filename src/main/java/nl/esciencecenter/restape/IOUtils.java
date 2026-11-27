@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.nio.file.NoSuchFileException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -38,7 +38,7 @@ public class IOUtils {
          * @return CWL content of the file representing a workflow
          * @throws IOException - if the file cannot be read
          */
-        public static String getLocalCwlFile(Path filePath) throws IOException, NoSuchFileException {
+        public static String getLocalCwlFile(Path filePath) throws IOException {
                 return FileUtils.readFileToString(filePath.toFile(), StandardCharsets.UTF_8);
         }
 
@@ -49,7 +49,7 @@ public class IOUtils {
          * @return Snakemake content of the file representing a workflow
          * @throws IOException - if the file cannot be read
          */
-        public static String getLocalSnakemakeFile(Path filePath) throws IOException, NoSuchFileException {
+        public static String getLocalSnakemakeFile(Path filePath) throws IOException {
             return FileUtils.readFileToString(filePath.toFile(), StandardCharsets.UTF_8);
         }
 
@@ -105,7 +105,7 @@ public class IOUtils {
          */
         private static void addReadmeToZip(ZipOutputStream zipOut) throws IOException {
                 // Download readme.txt and add to the zip
-                URL readmeUrl = new URL(README_URL);
+                URL readmeUrl = URI.create(README_URL).toURL();
                 HttpURLConnection httpURLConnection = (HttpURLConnection) readmeUrl.openConnection();
                 httpURLConnection.setRequestMethod("GET");
                 // Ensure the connection timeout is set to a reasonable value
