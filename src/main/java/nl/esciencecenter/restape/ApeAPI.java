@@ -1,6 +1,5 @@
 package nl.esciencecenter.restape;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,9 +168,7 @@ public class ApeAPI {
 
         APERunConfig runConfig = new APERunConfig(configurationJson, apeFramework.getDomainSetup());
 
-        JSONArray arrayConstraints = runConfig.getConstraintsJSON();
-
-        return arrayConstraints;
+        return runConfig.getConstraintsJSON();
     }
 
     /**
